@@ -33,9 +33,19 @@ public class StreamController {
     }
 
     @PostMapping
-    public ResponseEntity<StreamDTO> createStream(@Valid @RequestBody StreamDTO streamDTO) {
+    public ResponseEntity<StreamDTO> createStream(@Valid @RequestBody StreamDTO streamDTO) throws Exception {
         StreamDTO createdStreamDTO = streamService.createStream(streamDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdStreamDTO);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteStream(@PathVariable String id) {
+        try {
+            streamService.deleteStream(id);
+            return ResponseEntity.noContent().build(); // 204 No Content
+        } catch (StreamNotFoundException e) {
+            return ResponseEntity.notFound().build(); // 404 Not Found
+        }
     }
 
 }

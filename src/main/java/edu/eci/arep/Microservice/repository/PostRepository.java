@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface PostRepository extends MongoRepository<Post, String>{
     List<Post> findByStreamId(String streamId);
+    void deleteByStreamId(String streamId);
 }

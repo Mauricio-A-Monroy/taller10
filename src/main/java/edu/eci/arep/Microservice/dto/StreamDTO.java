@@ -1,11 +1,10 @@
 package edu.eci.arep.Microservice.dto;
 
-import java.time.LocalDate;
-import java.util.List;
-import edu.eci.arep.Microservice.model.Post;
+import jakarta.validation.constraints.NotBlank;
 
 public class StreamDTO {
 
+    @NotBlank(message = "Creator is required")
     private String creator;
 
     public StreamDTO(){}

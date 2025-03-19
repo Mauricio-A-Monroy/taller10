@@ -12,7 +12,9 @@ public class Stream {
     private String creator;
     private LocalDate date;
 
-    public Stream() {}
+    public Stream() {
+        this.date = LocalDate.now();
+    }
 
     public Stream(String creator) {
         this.creator = creator;

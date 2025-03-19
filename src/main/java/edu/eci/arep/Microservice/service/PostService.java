@@ -21,4 +21,8 @@ public class PostService {
     public List<Post> getPostsByStreamId(String streamId) {
         return postRepository.findByStreamId(streamId);
     }
+
+    public void deletePostsByStreamId(String streamId) {
+        postRepository.deleteByStreamId(streamId); // Elimina todos los posts asociados al stream
+    }
 }
