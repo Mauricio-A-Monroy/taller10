@@ -1,28 +1,25 @@
 package edu.eci.arep.Microservice.dto;
 
-import edu.eci.arep.Microservice.model.User;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 public class PostDTO {
 
+    @Size(max = 140, message = "Content must be 140 characters or less")
     private String content;
     private String user;
     private LocalDate date;
 
     public PostDTO(){}
 
-    public PostDTO(String user, String content, LocalDate date) throws Exception{
+    public PostDTO(String user, String content, LocalDate date){
         this.user = user;
-        setContent(content);
+        this.content = content;
         this.date = date;
     }
 
-    private void setContent(String content) throws Exception{
-        if(content.length() > 140){
-            throw new Exception("very expand content");
-        }
+    private void setContent(String content){
         this.content = content;
     }
 
@@ -42,6 +39,7 @@ public class PostDTO {
         return user;
     }
 
-    public LocalDate getDate(){return date;}
-    
+    public LocalDate getDate(){
+        return date;
+    }
 }

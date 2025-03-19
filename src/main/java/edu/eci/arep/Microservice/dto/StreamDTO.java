@@ -1,11 +1,8 @@
 package edu.eci.arep.Microservice.dto;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import edu.eci.arep.Microservice.model.Post;
-import edu.eci.arep.Microservice.model.User;
-import org.springframework.cglib.core.Local;
 
 public class StreamDTO {
     

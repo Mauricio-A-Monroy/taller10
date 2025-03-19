@@ -2,13 +2,10 @@ package edu.eci.arep.Microservice.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import edu.eci.arep.Microservice.dto.PostDTO;
-
 import java.time.LocalDate;
-import java.util.Date;
 
-@Document
+@Document(collection = "posts")
 public class Post {
 
     @Id
@@ -16,6 +13,7 @@ public class Post {
     private String user;
     private String content;
     private LocalDate date;
+    private String streamId; // Nuevo campo para relacionar con el stream
 
     public Post(PostDTO post){
         this.content = post.getContent();
@@ -49,4 +47,6 @@ public class Post {
         this.date = date;
     }
 
+    public void setStreamId(String id) {
+    }
 }

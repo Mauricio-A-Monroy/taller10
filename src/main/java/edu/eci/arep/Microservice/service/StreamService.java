@@ -1,15 +1,12 @@
 package edu.eci.arep.Microservice.service;
 
 import edu.eci.arep.Microservice.dto.PostDTO;
-import edu.eci.arep.Microservice.dto.UserDTO;
+import edu.eci.arep.Microservice.exception.StreamNotFoundException;
 import edu.eci.arep.Microservice.model.Post;
 import edu.eci.arep.Microservice.model.Stream;
-import edu.eci.arep.Microservice.model.User;
-import edu.eci.arep.Microservice.repository.PostRepository;
 import edu.eci.arep.Microservice.repository.StreamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.*;
 
@@ -19,32 +16,35 @@ public class StreamService {
     @Autowired
     private StreamRepository streamRepository;
 
-    public List<Stream> getAllStreams(){
+    @Autowired
+    private PostService postService; // Inyectar PostService
+
+    public List<Stream> getAllStreams() {
         return new ArrayList<>(streamRepository.findAll());
     }
 
-    public Stream updateStream(String id, PostDTO postDTO) throws Exception {
-        Stream stream = null;
-        if (id.equals("0")){
-            id = "";
-            String user = postDTO.getUser();
+    public Stream updateStream(String id, PostDTO postDTO) throws StreamNotFoundException, Exception {
+        Stream stream;
+        if (id.equals("0")) {
             stream = new Stream();
             stream.setDate(LocalDate.now());
-            stream.setCreator(user);
-        }
-        else {
+            stream.setCreator(postDTO.getUser());
+        } else {
             Optional<Stream> optionalStream = streamRepository.findById(id);
-            if(optionalStream.isEmpty()){
-                throw new Exception("Stream not found");
+            if (optionalStream.isEmpty()) {
+                throw new StreamNotFoundException(id);
             }
             stream = optionalStream.get();
         }
-        Post post = new Post(postDTO);
+
+        // Delegar la creación del post a PostService
+        Post post = postService.createPost(postDTO);
+        post.setStreamId(stream.getId()); // Asignar el ID del stream al post
+
         List<Post> posts = (stream.getPosts() != null && !id.equals("0")) ? stream.getPosts() : new ArrayList<>();
         posts.add(post);
         stream.setPosts(posts);
         streamRepository.save(stream);
         return stream;
     }
-
 }

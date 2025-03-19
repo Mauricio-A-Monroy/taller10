@@ -1,9 +1,12 @@
 package edu.eci.arep.Microservice.dto;
 
+import jakarta.validation.constraints.Email;
+
 public class UserDTO {
 
     private String name;
     private String lastName;
+    @Email(message = "Invalid email")
     private String email;
     private String password;
 

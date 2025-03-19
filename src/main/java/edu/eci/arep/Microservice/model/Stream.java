@@ -2,12 +2,10 @@ package edu.eci.arep.Microservice.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
-@Document
+@Document(collection = "streams")
 public class Stream {
 
     @Id
