@@ -1,14 +1,15 @@
 package edu.eci.arep.Microservice.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.adaschool.project.model.*;
-import org.adaschool.project.dto.*;
-import org.adaschool.project.repository.UserRepository;
-import org.adaschool.project.exception.UserNotFoundException;
+
+import edu.eci.arep.Microservice.dto.UserDTO;
+import edu.eci.arep.Microservice.exception.UserNotFoundException;
+import edu.eci.arep.Microservice.model.User;
+import edu.eci.arep.Microservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.type.TypeReference;
-
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -33,10 +34,10 @@ public class UserService {
         return new ArrayList<>(userRepository.findAll());
     }
 
-    public User getUserById(String id){
+    public User getUserById(String id) throws Exception{
         Optional<User> user = userRepository.findById(id);
         if(user.isPresent()) return user.get();
-        throw new UserNotFoundException(id);
+        throw new Exception(id);
     }
 
     public User saveUser(UserDTO userDTO){
@@ -45,21 +46,29 @@ public class UserService {
         return newUser;
     }
 
-    public User updateUser(String id, UserDTO userDTO){
+    public boolean auth(UserDTO userDto) {
+        User user = userRepository.findByEmail(userDto.getEmail());
+        if (user == null) {
+            return false;
+        }
+        return BCrypt.checkpw(userDto.getPassword(), user.getPassword());
+    }
+
+    public User updateUser(String id, UserDTO userDTO) throws Exception {
         Optional<User> user = userRepository.findById(id);
-        if(user.isEmpty()) throw new UserNotFoundException(id);
+        if(user.isEmpty()) throw new Exception(id);
         User updateUser = user.get();
         updateUser.update(userDTO);
         userRepository.save(updateUser);
         return updateUser;
     }
 
-    public void deleteUser(String id) throws UserNotFoundException{
+    public void deleteUser(String id) throws UserNotFoundException {
         if(!userRepository.existsById(id)) throw new UserNotFoundException(id);
         userRepository.deleteById(id);
     }
 
-    // Design
+    /*    // Design
 
     // GET Requests
 
@@ -393,6 +402,6 @@ public class UserService {
         if(response.statusCode() != 200){
             throw new Exception();
         }
-    }
+    }*/
 
 }

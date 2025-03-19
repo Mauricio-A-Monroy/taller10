@@ -1,8 +1,8 @@
 package edu.eci.arep.Microservice.model;
 
-import edu.eci.arep.Microservice.dto.UserDTO;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import edu.eci.arep.Microservice.dto.UserDTO;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Document(collection = "users")
@@ -26,13 +26,13 @@ public class User {
         this.password = new BCryptPasswordEncoder().encode(password);
     }
 
-    public User(UserDTO userDTO){
-        this.id = null;
-        this.name = userDTO.getName();
-        this.lastName = userDTO.getLastName();
-        this.email = userDTO.getEmail();
-        this.password = new BCryptPasswordEncoder().encode(userDTO.getPassword());
-    }
+     public User(UserDTO userDTO){
+         this.id = null;
+         this.name = userDTO.getName();
+         this.lastName = userDTO.getLastName();
+         this.email = userDTO.getEmail();
+         this.password = new BCryptPasswordEncoder().encode(userDTO.getPassword());
+     }
 
     public String getId(){
         return id;
@@ -62,19 +62,19 @@ public class User {
         this.email = email;
     }
 
-    public String getPasswordHash() {
-        return password;
-    }
-
     public void setPassword(String password) {
         this.password = password;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     public void update(UserDTO userDTO){
-        this.name = userDTO.getName();
-        this.lastName = userDTO.getLastName();
-        this.email = userDTO.getEmail();
-        this.password = new BCryptPasswordEncoder().encode(userDTO.getPassword());
+         this.name = userDTO.getName();
+         this.lastName = userDTO.getLastName();
+         this.email = userDTO.getEmail();
+         this.password = new BCryptPasswordEncoder().encode(userDTO.getPassword());
     }
 }
 
