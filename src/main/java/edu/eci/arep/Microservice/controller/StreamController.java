@@ -2,6 +2,7 @@ package edu.eci.arep.Microservice.controller;
 
 import edu.eci.arep.Microservice.dto.PostDTO;
 import edu.eci.arep.Microservice.dto.StreamDTO;
+import edu.eci.arep.Microservice.dto.StreamResponseDTO;
 import edu.eci.arep.Microservice.exception.StreamNotFoundException;
 import edu.eci.arep.Microservice.model.Stream;
 import edu.eci.arep.Microservice.service.StreamService;
@@ -27,14 +28,14 @@ public class StreamController {
 
     //Consulta todos los post asociados a un stream especifico
     @GetMapping("/{id}")
-    public ResponseEntity<StreamDTO> getStream(@PathVariable String id) throws StreamNotFoundException {
-        StreamDTO streamDTO = streamService.getStreamById(id);
+    public ResponseEntity<StreamResponseDTO> getStream(@PathVariable String id) throws StreamNotFoundException {
+        StreamResponseDTO streamDTO = streamService.getStreamById(id);
         return ResponseEntity.ok(streamDTO);
     }
 
     @PostMapping
-    public ResponseEntity<StreamDTO> createStream(@Valid @RequestBody StreamDTO streamDTO) throws Exception {
-        StreamDTO createdStreamDTO = streamService.createStream(streamDTO);
+    public ResponseEntity<StreamResponseDTO> createStream(@Valid @RequestBody StreamDTO streamDTO) throws Exception {
+        StreamResponseDTO createdStreamDTO = streamService.createStream(streamDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdStreamDTO);
     }
 

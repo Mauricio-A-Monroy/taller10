@@ -2,8 +2,6 @@ package edu.eci.arep.Microservice.dto;
 
 import jakarta.validation.constraints.Size;
 
-import java.time.LocalDate;
-
 public class PostDTO {
 
     private String user;
