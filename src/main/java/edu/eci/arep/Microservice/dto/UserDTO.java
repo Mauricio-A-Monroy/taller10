@@ -10,8 +10,7 @@ public class UserDTO {
     private String email;
     private String password;
 
-    public UserDTO() {
-    }
+    public UserDTO() {}
 
     public UserDTO(String name, String lastName, String email, String password) {
         this.name  = name;
@@ -20,35 +19,35 @@ public class UserDTO {
         this.password = password;
     }
 
-    public void setName(String name){
-        this.name = name;
-    }
-
-    public void setLastName(String lastName){
-        this.lastName = lastName;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getName(){
+    public String getName() {
         return name;
     }
 
-    public String getLastName(){
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLastName() {
         return lastName;
     }
 
-    public String getEmail() {
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public @Email(message = "Invalid email") String getEmail() {
         return email;
+    }
+
+    public void setEmail(@Email(message = "Invalid email") String email) {
+        this.email = email;
     }
 
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

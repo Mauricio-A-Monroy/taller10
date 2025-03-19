@@ -1,6 +1,7 @@
 package edu.eci.arep.Microservice.service;
 
 import edu.eci.arep.Microservice.dto.PostDTO;
+import edu.eci.arep.Microservice.dto.StreamDTO;
 import edu.eci.arep.Microservice.exception.StreamNotFoundException;
 import edu.eci.arep.Microservice.model.Post;
 import edu.eci.arep.Microservice.model.Stream;
@@ -17,34 +18,26 @@ public class StreamService {
     private StreamRepository streamRepository;
 
     @Autowired
-    private PostService postService; // Inyectar PostService
+    private PostService postService;
 
     public List<Stream> getAllStreams() {
         return new ArrayList<>(streamRepository.findAll());
     }
 
-    public Stream updateStream(String id, PostDTO postDTO) throws StreamNotFoundException, Exception {
-        Stream stream;
-        if (id.equals("0")) {
-            stream = new Stream();
-            stream.setDate(LocalDate.now());
-            stream.setCreator(postDTO.getUser());
-        } else {
-            Optional<Stream> optionalStream = streamRepository.findById(id);
-            if (optionalStream.isEmpty()) {
-                throw new StreamNotFoundException(id);
-            }
-            stream = optionalStream.get();
-        }
-
-        // Delegar la creación del post a PostService
-        Post post = postService.createPost(postDTO);
-        post.setStreamId(stream.getId()); // Asignar el ID del stream al post
-
-        List<Post> posts = (stream.getPosts() != null && !id.equals("0")) ? stream.getPosts() : new ArrayList<>();
-        posts.add(post);
-        stream.setPosts(posts);
-        streamRepository.save(stream);
-        return stream;
+    public StreamDTO createStream(StreamDTO streamDTO) {
+        Stream stream = new Stream();
+        stream.setCreator(streamDTO.getCreator());
+        stream = streamRepository.save(stream);
+        return new StreamDTO(stream.getCreator());
     }
+
+    public StreamDTO getStreamById(String id) throws StreamNotFoundException {
+        Optional<Stream> optionalStream = streamRepository.findById(id);
+        if (optionalStream.isEmpty()) {
+            throw new StreamNotFoundException(id);
+        }
+        Stream stream = optionalStream.get();
+        return new StreamDTO(stream.getCreator());
+    }
+
 }

@@ -14,12 +14,6 @@ public class PostService {
     private PostRepository postRepository;
 
     public Post createPost(PostDTO postDTO) throws Exception {
-        // Validar el contenido del post
-        if (postDTO.getContent().length() > 140) {
-            throw new Exception("Content must be 140 characters or less");
-        }
-
-        // Crear y guardar el post
         Post post = new Post(postDTO);
         return postRepository.save(post);
     }
