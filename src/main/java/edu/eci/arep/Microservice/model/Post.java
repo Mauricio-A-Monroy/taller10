@@ -10,7 +10,7 @@ public class Post {
 
     @Id
     private String id;
-    private String user;
+    private String creator;
     private String content;
     private LocalDate date;
     private String streamId; // Nuevo campo para relacionar con el stream
@@ -18,7 +18,7 @@ public class Post {
     public Post() {}
 
     public Post(PostDTO post){
-        this.user = post.getUser();
+        this.creator = post.getCreator();
         this.content = post.getContent();
         this.date = LocalDate.now();
         this.streamId = post.getStreamId();
@@ -32,12 +32,12 @@ public class Post {
         this.id = id;
     }
 
-    public String getUser() {
-        return user;
+    public String getCreator() {
+        return creator;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setCreator(String user) {
+        this.creator = user;
     }
 
     public String getContent() {

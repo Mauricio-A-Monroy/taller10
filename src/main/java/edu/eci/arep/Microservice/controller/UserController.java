@@ -1,14 +1,17 @@
  package edu.eci.arep.Microservice.controller;
 
  import edu.eci.arep.Microservice.dto.*;
+ import edu.eci.arep.Microservice.exception.UserException;
  import edu.eci.arep.Microservice.model.*;
  import edu.eci.arep.Microservice.service.UserService;
  import jakarta.validation.Valid;
  import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.http.HttpStatus;
  import org.springframework.http.ResponseEntity;
  import org.springframework.web.bind.annotation.*;
  import java.net.URI;
  import java.util.List;
+ import java.util.Map;
 
  @RestController()
  @RequestMapping("/user")
@@ -28,27 +31,48 @@
      }
 
      @GetMapping("/{id}")
-     public ResponseEntity<User> findById(@PathVariable("id") String id) throws Exception {
-         User user = userService.getUserById(id);
-         return ResponseEntity.ok(user);
+     public ResponseEntity<Object> findById(@PathVariable("id") String id){
+         try {
+             User user = userService.getUserById(id);
+             return ResponseEntity.ok(user);
+         } catch (UserException e) {
+             return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                     .body(Map.of("error", "No existe un usuario con el id " + id));
+         }
      }
 
      @PostMapping
-     public ResponseEntity<User> createUser(@Valid @RequestBody UserDTO userDTO) {
-         User createdUser = userService.saveUser(userDTO);
-         URI createdUserUri = URI.create("user/" + createdUser.getId());
-         return ResponseEntity.created(createdUserUri).body(createdUser);
+     public ResponseEntity<Object> createUser(@Valid @RequestBody UserDTO userDTO) {
+         try {
+             User createdUser = userService.saveUser(userDTO);
+             URI createdUserUri = URI.create("user/" + createdUser.getId());
+             return ResponseEntity.created(createdUserUri).body(createdUser);
+         } catch (UserException e) {
+             return ResponseEntity.status(HttpStatus.CONFLICT)
+                     .body(Map.of("error", "El nombre de usuario ya está en uso"));
+         }
      }
 
      @PutMapping("/{id}")
-     public ResponseEntity<User> updateUser(@PathVariable("id") String id, @RequestBody UserDTO userDTO) throws Exception {
-         User updatedUser = userService.updateUser(id, userDTO);
-         return ResponseEntity.ok(updatedUser);
+     public ResponseEntity<Object> updateUser(@PathVariable("id") String id, @RequestBody UserDTO userDTO){
+         try {
+             User updatedUser = userService.updateUser(id, userDTO);
+             return ResponseEntity.ok(updatedUser);
+         } catch (UserException e) {
+             return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                     .body(Map.of("error", "No existe un usuario con el id " + id));
+         }
      }
 
      @DeleteMapping("/{id}")
-     public ResponseEntity<Void> deleteUser(@PathVariable("id") String id) {
-         userService.deleteUser(id);
-         return ResponseEntity.ok(null);
+     public ResponseEntity<Map<String, String>> deleteUser(@PathVariable("id") String id) {
+         try {
+             userService.deleteUser(id);
+             return ResponseEntity.ok(Map.of("message", "Usuario eliminado correctamente"));
+         } catch (UserException e) {
+             return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                     .body(Map.of("error", "No existe un usuario con el id " + id));
+         }
      }
+
  }

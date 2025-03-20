@@ -3,6 +3,7 @@ package edu.eci.arep.Microservice.service;
 import edu.eci.arep.Microservice.dto.StreamDTO;
 import edu.eci.arep.Microservice.dto.StreamResponseDTO;
 import edu.eci.arep.Microservice.exception.StreamNotFoundException;
+import edu.eci.arep.Microservice.exception.UserException;
 import edu.eci.arep.Microservice.model.Post;
 import edu.eci.arep.Microservice.model.Stream;
 import edu.eci.arep.Microservice.model.User;
@@ -53,24 +54,23 @@ public class StreamService {
             throw new Exception("Creator is required");
         }
 
-        // Validar que el creator exista en la base de datos
-        User user = userService.getUserById(streamDTO.getCreator());
-        if (user == null) {
-            throw new Exception("Creator does not exist");
+        try {
+            User user = userService.getUserByName(streamDTO.getCreator());
+            Stream stream = new Stream(streamDTO.getCreator());
+            stream = streamRepository.save(stream);
+
+            // Obtener los posts asociados (inicialmente vacíos)
+            List<Post> posts = postService.getPostsByStreamId(stream.getId());
+
+            return new StreamResponseDTO(
+                    stream.getId(),
+                    stream.getCreator(),
+                    stream.getDate(),
+                    posts
+            );
+        } catch (UserException e) {
+            throw new UserException(UserException.USER_NOT_FOUND);
         }
-
-        Stream stream = new Stream(streamDTO.getCreator());
-        stream = streamRepository.save(stream);
-
-        // Obtener los posts asociados (inicialmente vacíos)
-        List<Post> posts = postService.getPostsByStreamId(stream.getId());
-
-        return new StreamResponseDTO(
-                stream.getId(),
-                stream.getCreator(),
-                stream.getDate(),
-                posts
-        );
     }
 
     public void deleteStream(String id) throws StreamNotFoundException {

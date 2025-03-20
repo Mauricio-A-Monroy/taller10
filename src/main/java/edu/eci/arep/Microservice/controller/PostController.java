@@ -2,6 +2,7 @@ package edu.eci.arep.Microservice.controller;
 
 import edu.eci.arep.Microservice.dto.PostDTO;
 import edu.eci.arep.Microservice.exception.StreamNotFoundException;
+import edu.eci.arep.Microservice.exception.UserException;
 import edu.eci.arep.Microservice.model.Post;
 import edu.eci.arep.Microservice.service.PostService;
 import jakarta.validation.Valid;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/post")
@@ -24,8 +27,13 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<Post> createPost(@Valid @RequestBody PostDTO postDTO) throws Exception {
-        Post post = postService.createPost(postDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(post);
+    public ResponseEntity<Object> createPost(@Valid @RequestBody PostDTO postDTO){
+        try {
+            PostDTO postCreated = postService.createPost(postDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(postCreated);
+        } catch (UserException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "No existe un usuario con el nombre: " + postDTO.getCreator()));
+        }
     }
 }

@@ -1,9 +1,13 @@
 package edu.eci.arep.Microservice.service;
 
 import edu.eci.arep.Microservice.dto.PostDTO;
+import edu.eci.arep.Microservice.dto.StreamResponseDTO;
 import edu.eci.arep.Microservice.exception.PostNotFoundException;
 import edu.eci.arep.Microservice.exception.StreamNotFoundException;
+import edu.eci.arep.Microservice.exception.UserException;
 import edu.eci.arep.Microservice.model.Post;
+import edu.eci.arep.Microservice.model.Stream;
+import edu.eci.arep.Microservice.model.User;
 import edu.eci.arep.Microservice.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,9 +20,19 @@ public class PostService {
     @Autowired
     private PostRepository postRepository;
 
-    public Post createPost(PostDTO postDTO) throws Exception {
+    @Autowired
+    private UserService userService;
+
+    public PostDTO createPost(PostDTO postDTO) throws UserException {
+        try {
+            User user = userService.getUserByName(postDTO.getCreator());
+        } catch (UserException e) {
+            throw new UserException(UserException.USER_NOT_FOUND);
+        }
+
         Post post = new Post(postDTO);
-        return postRepository.save(post);
+        post = postRepository.save(post);
+        return new PostDTO(post.getCreator(),post.getContent(),post.getStreamId());
     }
 
     public PostDTO getPostById(String id) throws StreamNotFoundException {
@@ -27,7 +41,7 @@ public class PostService {
             throw new PostNotFoundException(id);
         }
         Post post = optionalPost.get();
-        return new PostDTO(post.getUser(),post.getContent(),post.getStreamId());
+        return new PostDTO(post.getCreator(),post.getContent(),post.getStreamId());
     }
 
     //Obtener todos los post asociados a un stream especifico

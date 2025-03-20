@@ -30,7 +30,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:3000", "http://localhost:8081"));  // Permite solicitudes desde este origen
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));  // Métodos permitidos
         configuration.setAllowedHeaders(List.of("*"));  // Todos los encabezados permitidos
-        configuration.setAllowCredentials(true);  // Permite credenciales (cookies, encabezados de autenticación)
+        configuration.setAllowCredentials(false);  // Permite credenciales (cookies, encabezados de autenticación)
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);  // Aplica la configuración a todas las rutas

@@ -4,25 +4,25 @@ import jakarta.validation.constraints.Size;
 
 public class PostDTO {
 
-    private String user;
+    private String creator;
     @Size(max = 140, message = "Content must be 140 characters or less")
     private String content;
     private String streamId;
 
     public PostDTO(){}
 
-    public PostDTO(String user, String content, String streamId) {
-        this.user = user;
+    public PostDTO(String creator, String content, String streamId) {
+        this.creator = creator;
         this.content = content;
         this.streamId = streamId;
     }
 
-    public String getUser() {
-        return user;
+    public String getCreator() {
+        return creator;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
     public @Size(max = 140, message = "Content must be 140 characters or less") String getContent() {
