@@ -23,7 +23,7 @@ public class User {
         this.name = name;
         this.lastName = lastName;
         this.email = email;
-        this.password = new BCryptPasswordEncoder().encode(password);
+        this.password = password;
     }
 
      public User(UserDTO userDTO){
@@ -31,7 +31,7 @@ public class User {
          this.name = userDTO.getName();
          this.lastName = userDTO.getLastName();
          this.email = userDTO.getEmail();
-         this.password = new BCryptPasswordEncoder().encode(userDTO.getPassword());
+         this.password = userDTO.getPassword();
      }
 
     public String getId(){

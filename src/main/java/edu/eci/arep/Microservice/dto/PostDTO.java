@@ -1,47 +1,43 @@
 package edu.eci.arep.Microservice.dto;
 
-import edu.eci.arep.Microservice.model.User;
-
-import java.time.LocalDate;
-import java.util.Date;
+import jakarta.validation.constraints.Size;
 
 public class PostDTO {
 
+    private String creator;
+    @Size(max = 140, message = "Content must be 140 characters or less")
     private String content;
-    private String user;
-    private LocalDate date;
+    private String streamId;
 
     public PostDTO(){}
 
-    public PostDTO(String user, String content, LocalDate date) throws Exception{
-        this.user = user;
-        setContent(content);
-        this.date = date;
-    }
-
-    private void setContent(String content) throws Exception{
-        if(content.length() > 140){
-            throw new Exception("very expand content");
-        }
+    public PostDTO(String creator, String content, String streamId) {
+        this.creator = creator;
         this.content = content;
+        this.streamId = streamId;
     }
 
-    private void setUser(String user){
-        this.user = user;
+    public String getCreator() {
+        return creator;
     }
 
-    private void setDate(LocalDate date){
-        this.date = date;
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
-    public String getContent(){
+    public @Size(max = 140, message = "Content must be 140 characters or less") String getContent() {
         return content;
     }
 
-    public String getUser(){
-        return user;
+    public void setContent(@Size(max = 140, message = "Content must be 140 characters or less") String content) {
+        this.content = content;
     }
 
-    public LocalDate getDate(){return date;}
-    
+    public String getStreamId() {
+        return streamId;
+    }
+
+    public void setStreamId(String streamId) {
+        this.streamId = streamId;
+    }
 }

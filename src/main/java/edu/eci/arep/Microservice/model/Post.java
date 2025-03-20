@@ -2,51 +2,61 @@ package edu.eci.arep.Microservice.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import edu.eci.arep.Microservice.dto.PostDTO;
-
 import java.time.LocalDate;
-import java.util.Date;
 
-@Document
+@Document(collection = "posts")
 public class Post {
 
     @Id
     private String id;
-    private String user;
+    private String creator;
     private String content;
     private LocalDate date;
+    private String streamId; // Nuevo campo para relacionar con el stream
+
+    public Post() {}
 
     public Post(PostDTO post){
+        this.creator = post.getCreator();
         this.content = post.getContent();
-        this.user = post.getUser();
-        this.date = post.getDate();
+        this.date = LocalDate.now();
+        this.streamId = post.getStreamId();
     }
 
-    public Post(){}
-    
-    public String getContent(){
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String user) {
+        this.creator = user;
+    }
+
+    public String getContent() {
         return content;
-    }
-
-    public String getUser(){
-        return user;
-    }
-
-    public LocalDate getDate(){
-        return date;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
     }
 
     public void setContent(String content) {
         this.content = content;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public LocalDate getDate() {return date;}
+
+    public void setDate(LocalDate date) {this.date = date;}
+
+    public String getStreamId() {
+        return streamId;
     }
 
+    public void setStreamId(String streamId) {
+        this.streamId = streamId;
+    }
 }

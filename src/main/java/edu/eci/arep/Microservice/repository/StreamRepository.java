@@ -7,5 +7,4 @@ import edu.eci.arep.Microservice.model.Stream;
 
 @Repository
 public interface StreamRepository extends MongoRepository<Stream, String>{
-    
 }
