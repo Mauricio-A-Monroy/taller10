@@ -24,6 +24,12 @@ public class Post {
         this.streamId = post.getStreamId();
     }
 
+    public Post(String creator, String content, String streamId) {
+        this.creator = creator;
+        this.content = content;
+        this.streamId = streamId;
+    }
+
     public String getId() {
         return id;
     }
