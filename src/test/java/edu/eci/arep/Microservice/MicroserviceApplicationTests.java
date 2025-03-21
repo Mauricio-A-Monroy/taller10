@@ -1,7 +1,7 @@
-/*package edu.eci.arep.Microservice;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+//package edu.eci.arep.Microservice;
+//
+//import org.junit.jupiter.api.Test;
+//import org.springframework.boot.test.context.SpringBootTest;
 //
 //@SpringBootTest
 //class MicroserviceApplicationTests {
@@ -11,4 +11,3 @@ import org.springframework.boot.test.context.SpringBootTest;
 //	}
 //
 //}
-*/
