@@ -30,6 +30,15 @@
          return ResponseEntity.ok(users);
      }
 
+     public User getUserByEmail(String email) throws UserException {
+        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(email));
+        if (user.isPresent()) {
+            return user.get();
+        } else {
+            throw new UserException(UserException.USER_NOT_FOUND);
+        }
+    }
+  
      @GetMapping("/{id}")
      public ResponseEntity<Object> findById(@PathVariable("id") String id){
          try {
@@ -40,6 +49,8 @@
                      .body(Map.of("error", "No existe un usuario con el id " + id));
          }
      }
+
+  
 
      @PostMapping
      public ResponseEntity<Object> createUser(@Valid @RequestBody UserDTO userDTO) {
