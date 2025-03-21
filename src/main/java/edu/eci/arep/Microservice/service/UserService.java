@@ -81,4 +81,14 @@ public class UserService {
         if(!userRepository.existsById(id)) throw new UserException(UserException.USER_NOT_FOUND);
         userRepository.deleteById(id);
     }
+
+    public User getUserByEmail(String email) throws UserException {
+        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(email));
+        if (user.isPresent()) {
+            return user.get();
+        } else {
+            throw new UserException(UserException.USER_NOT_FOUND);
+        }
+    }
 }
+
