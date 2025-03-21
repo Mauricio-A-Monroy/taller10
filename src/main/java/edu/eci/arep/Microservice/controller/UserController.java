@@ -30,6 +30,17 @@
          return ResponseEntity.ok(users);
      }
 
+     @GetMapping("/email/{email}")
+     public ResponseEntity<Object> findUserByEmail(@PathVariable("email") String email){
+         try {
+             User user = userService.getUserByEmail(email);
+             return ResponseEntity.ok(user);
+         } catch (UserException e) {
+             return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                     .body(Map.of("error", "No existe un usuario con el email " + email));
+         }
+     }
+  
      @GetMapping("/{id}")
      public ResponseEntity<Object> findById(@PathVariable("id") String id){
          try {
@@ -51,6 +62,7 @@
                      .body(Map.of("error", "No existe un usuario con el email " + email));
          }
      }
+
 
      @PostMapping
      public ResponseEntity<Object> createUser(@Valid @RequestBody UserDTO userDTO) {

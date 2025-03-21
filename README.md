@@ -170,14 +170,20 @@ mvn clean package
 3. Ejecutar `mvn clean install`
 4. Iniciar la aplicación con `mvn spring-boot:run`
 
+### Repositorio del frontend
+```bash
+git clone https://github.com/Samuelfdm/FrontMicroserviceX.git
+cd FrontMicroserviceX
+```
+
 ### Despliegue en AWS Lambda
 
 1. Empaquetar la aplicación:
    ```
-   mvn package
+   mvn clean package
    ```
 
-2. Crear una función Lambda en AWS y cargar el archivo JAR generado.
+2. Crear una función Lambda en AWS y cargar el archivo ZIP/JAR generado.
 
 3. Configurar los permisos y variables de entorno necesarios.
 
@@ -186,7 +192,7 @@ mvn clean package
 ---
 ## Videos del funcionamiento
 
-
+https://youtu.be/ioTk5dV7DrE
 
 ---
 
@@ -194,9 +200,67 @@ mvn clean package
 
 Para garantizar la calidad y correcto funcionamiento del sistema, se realizaron las siguientes pruebas:
 
-
+![img.png](src/main/resources/img/img.png)
 
 ---
+
+### Explicación de las Pruebas
+
+* testGetUserById_Success: Verifica que el método getUserById retorne un usuario existente cuando se proporciona un ID válido.
+
+* testGetUserById_NotFound: Verifica que el método getUserById lance una excepción UserException cuando el usuario no existe.
+
+* testSaveUser_Success: Verifica que el método saveUser guarde un nuevo usuario correctamente.
+
+* testSaveUser_UsernameAlreadyExists: Verifica que el método saveUser lance una excepción UserException cuando el nombre de usuario ya existe.
+
+* testAuth_Success: Verifica que el método auth retorne true cuando las credenciales son correctas.
+
+* testAuth_Failure: Verifica que el método auth retorne false cuando las credenciales son incorrectas.
+
+![img2.png](src%2Fmain%2Fresources%2Fimg%2Fimg2.png)
+
+---
+
+### Explicación de las Pruebas
+
+* Inicialización de Mocks:
+* MockitoAnnotations.openMocks(this) se usa en el método setUp para inicializar los mocks y inyectarlos en el controlador (authController).
+* Simulación de AuthenticationManager:
+* En testSignIn_Success, se simula el comportamiento de authenticationManager.authenticate() para devolver un objeto Authentication simulado.
+* Luego, se simula el método getPrincipal() para devolver un UserDetails simulado.
+* Simulación de UserRepository:
+* En testSignUp_Success, se simula el comportamiento de userRepository.findByName() para devolver null (indicando que el usuario no existe).
+* También se simula passwordEncoder.encode() para devolver una contraseña codificada.
+* Verificación de Comportamiento:
+* Se verifica que los métodos simulados se llamen el número correcto de veces usando verify.
+
+---
+
+![img_1.png](src%2Fmain%2Fresources%2Fimg%2Fimg_1.png)
+
+### Explicación de las Pruebas
+
+* testCreatePost_Success: Verifica que un post se crea correctamente cuando el usuario existe.
+* testCreatePost_UserNotFound: Verifica que se lanza una excepción cuando el usuario no existe.
+* testGetPostById_Success: Verifica que se obtiene un post por su ID correctamente.
+* testGetPostsByStreamId_Success: Verifica que se obtienen los posts asociados a un stream.
+
+---
+
+![img_2.png](src%2Fmain%2Fresources%2Fimg%2Fimg_2.png)
+
+### Explicación de las Pruebas
+
+* testCreateStream_Success: Verifica que un stream se crea correctamente cuando el usuario existe.
+* testCreateStream_UserNotFound: Verifica que se lanza una excepción cuando el usuario no existe.
+* testGetStreamById_Success: Verifica que se obtiene un stream por su ID correctamente.
+* testGetStreamById_NotFound: Verifica que se lanza una excepción cuando el stream no existe.
+* testDeleteStream_Success: Verifica que un stream se elimina correctamente.
+* testDeleteStream_NotFound: Verifica que se lanza una excepción cuando el stream no existe.
+
+---
+
 ## Conclusiones
 
 Este proyecto demuestra la implementación de una arquitectura de microservicios utilizando tecnologías modernas como Spring Boot, JWT y AWS Lambda. La separación en microservicios proporciona mayor flexibilidad, escalabilidad y facilidad de mantenimiento.

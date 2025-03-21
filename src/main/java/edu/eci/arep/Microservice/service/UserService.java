@@ -32,6 +32,15 @@ public class UserService {
         }
     }
 
+    public User getUserByEmail(String email) throws UserException {
+        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(email));
+        if (user.isPresent()) {
+            return user.get();
+        } else {
+            throw new UserException(UserException.USER_NOT_FOUND);
+        }
+    }
+
     public User getUserByName(String name) throws UserException{
         Optional<User> user = Optional.ofNullable(userRepository.findByName(name));
         if (user.isPresent()) {
@@ -82,3 +91,4 @@ public class UserService {
         }
     }
 }
+
