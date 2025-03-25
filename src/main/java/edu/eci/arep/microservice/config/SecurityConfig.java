@@ -22,7 +22,7 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
 
-    public CustomUserDetailsService userDetailsService;
+    CustomUserDetailsService userDetailsService;
     private AuthEntryPointJwt unauthorizedHandler;
 
     @Autowired
