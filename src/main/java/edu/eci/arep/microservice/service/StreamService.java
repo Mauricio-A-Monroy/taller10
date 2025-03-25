@@ -53,23 +53,26 @@ public class StreamService {
             throw new Exception("Creator is required");
         }
 
-        try {
-            User user = userService.getUserByName(streamDTO.getCreator());
-            Stream stream = new Stream(streamDTO.getCreator());
-            stream = streamRepository.save(stream);
 
-            // Obtener los posts asociados (inicialmente vacíos)
-            List<Post> posts = postService.getPostsByStreamId(stream.getId());
+        User user = userService.getUserByName(streamDTO.getCreator());
 
-            return new StreamResponseDTO(
-                    stream.getId(),
-                    stream.getCreator(),
-                    stream.getDate(),
-                    posts
-            );
-        } catch (UserException e) {
+        if (user == null){
             throw new UserException(UserException.USER_NOT_FOUND);
         }
+
+        Stream stream = new Stream(streamDTO.getCreator());
+        stream = streamRepository.save(stream);
+
+        // Obtener los posts asociados (inicialmente vacíos)
+        List<Post> posts = postService.getPostsByStreamId(stream.getId());
+
+        return new StreamResponseDTO(
+                stream.getId(),
+                stream.getCreator(),
+                stream.getDate(),
+                posts
+        );
+
     }
 
     public void deleteStream(String id) throws StreamNotFoundException {

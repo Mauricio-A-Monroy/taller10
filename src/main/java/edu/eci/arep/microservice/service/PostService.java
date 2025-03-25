@@ -22,9 +22,10 @@ public class PostService {
     private UserService userService;
 
     public PostDTO createPost(PostDTO postDTO) throws UserException {
-        try {
-            User user = userService.getUserByName(postDTO.getCreator());
-        } catch (UserException e) {
+
+        User user = userService.getUserByName(postDTO.getCreator());
+
+        if (user == null){
             throw new UserException(UserException.USER_NOT_FOUND);
         }
 
