@@ -22,10 +22,14 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
 
-    @Autowired
-    CustomUserDetailsService userDetailsService;
-    @Autowired
+    public CustomUserDetailsService userDetailsService;
     private AuthEntryPointJwt unauthorizedHandler;
+
+    @Autowired
+    public SecurityConfig(CustomUserDetailsService userDetailsService, AuthEntryPointJwt unauthorizedHandler) {
+        this.userDetailsService = userDetailsService;
+        this.unauthorizedHandler = unauthorizedHandler;
+    }
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {

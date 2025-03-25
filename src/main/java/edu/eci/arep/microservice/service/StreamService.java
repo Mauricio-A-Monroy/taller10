@@ -15,14 +15,19 @@ import java.util.*;
 @Service
 public class StreamService {
 
-    @Autowired
+
     private StreamRepository streamRepository;
 
-    @Autowired
     private UserService userService;
 
-    @Autowired
     private PostService postService;
+
+    @Autowired
+    public StreamService(StreamRepository streamRepository, UserService userService, PostService postService) {
+        this.streamRepository = streamRepository;
+        this.userService = userService;
+        this.postService = postService;
+    }
 
     public List<Stream> getAllStreams() {
         return new ArrayList<>(streamRepository.findAll());

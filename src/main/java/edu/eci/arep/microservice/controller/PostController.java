@@ -15,9 +15,12 @@ import java.util.Map;
 @RestController
 @RequestMapping("/post")
 public class PostController {
+    private PostService postService;
 
     @Autowired
-    private PostService postService;
+    public PostController(PostService postService) {
+        this.postService = postService;
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<PostDTO> getPostById(@PathVariable String id) throws StreamNotFoundException {

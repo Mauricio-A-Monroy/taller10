@@ -18,8 +18,12 @@ import java.util.Map;
 @RequestMapping("/stream")
 public class StreamController {
 
-    @Autowired
     StreamService streamService;
+
+    @Autowired
+    public StreamController(StreamService streamService) {
+        this.streamService = streamService;
+    }
 
     //Consulta todos los streams creados y sus post asociados
     @GetMapping

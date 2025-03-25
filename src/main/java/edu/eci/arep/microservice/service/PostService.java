@@ -15,11 +15,16 @@ import java.util.Optional;
 @Service
 public class PostService {
 
-    @Autowired
+
     private PostRepository postRepository;
 
-    @Autowired
     private UserService userService;
+
+    @Autowired
+    public PostService(PostRepository postRepository, UserService userService) {
+        this.postRepository = postRepository;
+        this.userService = userService;
+    }
 
     public PostDTO createPost(PostDTO postDTO) throws UserException {
 

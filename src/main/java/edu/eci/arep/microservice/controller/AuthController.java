@@ -15,14 +15,20 @@ import edu.eci.arep.microservice.repository.UserRepository;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-    @Autowired
+
     AuthenticationManager authenticationManager;
-    @Autowired
     UserRepository userRepository;
-    @Autowired
     PasswordEncoder encoder;
-    @Autowired
     JwtUtil jwtUtils;
+
+    @Autowired
+    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, PasswordEncoder encoder, JwtUtil jwtUtils) {
+        this.authenticationManager = authenticationManager;
+        this.userRepository = userRepository;
+        this.encoder = encoder;
+        this.jwtUtils = jwtUtils;
+    }
+
     @PostMapping("/signin")
     public String authenticateUser(@RequestBody UserDTO user) {
         Authentication authentication = authenticationManager.authenticate(
