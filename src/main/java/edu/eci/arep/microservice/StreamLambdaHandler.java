@@ -6,6 +6,7 @@ import com.amazonaws.serverless.proxy.model.AwsProxyResponse;
 import com.amazonaws.serverless.proxy.spring.SpringBootLambdaContainerHandler;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
+import edu.eci.arep.microservice.exception.ApplicationInitializationException;
 import jakarta.ws.rs.core.Application;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +21,7 @@ public class StreamLambdaHandler implements RequestStreamHandler {
        } catch (ContainerInitializationException e) {
            // if we fail here. We re-throw the exception to force another cold start
            e.printStackTrace();
-           throw new RuntimeException("Could not initialize Spring Boot application", e);
+           throw new ApplicationInitializationException("Could not initialize Spring Boot application", e);
        }
    }
 
