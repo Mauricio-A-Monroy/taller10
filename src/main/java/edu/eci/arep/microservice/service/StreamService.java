@@ -47,10 +47,10 @@ public class StreamService {
         );
     }
 
-    public StreamResponseDTO createStream(StreamDTO streamDTO) throws Exception {
+    public StreamResponseDTO createStream(StreamDTO streamDTO) throws UserException {
         // Validar que el creator no esté vacío
         if (streamDTO.getCreator() == null || streamDTO.getCreator().trim().isEmpty()) {
-            throw new Exception("Creator is required");
+            throw new UserException(UserException.CREATOR_REQUIRES);
         }
 
 
