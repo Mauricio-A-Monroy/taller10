@@ -18,6 +18,12 @@
  public class UserController {
 
      private final UserService userService;
+     private static String ERROR = "error";
+     private static String MESSAGE = "message";
+     private static String MAIL_NOT_FOUND = "No existe un usuario con el email ";
+     private static String ID_NOT_FOUND = "No existe un usuario con el id ";
+     private static String NAME_USED = "El nombre de usuario ya está en uso";
+     private static String DELETED = "Usuario eliminado correctamente";
 
      @Autowired
      public UserController(UserService userService) {
@@ -37,7 +43,7 @@
              return ResponseEntity.ok(user);
          } catch (UserException e) {
              return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                     .body(Map.of("error", "No existe un usuario con el email " + email));
+                     .body(Map.of(ERROR, MAIL_NOT_FOUND + email));
          }
      }
   
@@ -48,21 +54,9 @@
              return ResponseEntity.ok(user);
          } catch (UserException e) {
              return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                     .body(Map.of("error", "No existe un usuario con el id " + id));
+                     .body(Map.of(ERROR, ID_NOT_FOUND + id));
          }
      }
-
-     @GetMapping("/email/{email}")
-     public ResponseEntity<Object> findUserByEmail(@PathVariable("email") String email){
-         try {
-             User user = userService.getUserByEmail(email);
-             return ResponseEntity.ok(user);
-         } catch (UserException e) {
-             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                     .body(Map.of("error", "No existe un usuario con el email " + email));
-         }
-     }
-
 
      @PostMapping
      public ResponseEntity<Object> createUser(@Valid @RequestBody UserDTO userDTO) {
@@ -72,7 +66,7 @@
              return ResponseEntity.created(createdUserUri).body(createdUser);
          } catch (UserException e) {
              return ResponseEntity.status(HttpStatus.CONFLICT)
-                     .body(Map.of("error", "El nombre de usuario ya está en uso"));
+                     .body(Map.of(ERROR, NAME_USED));
          }
      }
 
@@ -83,7 +77,7 @@
              return ResponseEntity.ok(updatedUser);
          } catch (UserException e) {
              return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                     .body(Map.of("error", "No existe un usuario con el id " + id));
+                     .body(Map.of(ERROR, ID_NOT_FOUND + id));
          }
      }
 
@@ -91,10 +85,10 @@
      public ResponseEntity<Map<String, String>> deleteUser(@PathVariable("id") String id) {
          try {
              userService.deleteUser(id);
-             return ResponseEntity.ok(Map.of("message", "Usuario eliminado correctamente"));
+             return ResponseEntity.ok(Map.of(MESSAGE, DELETED));
          } catch (UserException e) {
              return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                     .body(Map.of("error", "No existe un usuario con el id " + id));
+                     .body(Map.of(ERROR, ID_NOT_FOUND + id));
          }
      }
 
