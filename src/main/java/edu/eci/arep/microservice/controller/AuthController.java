@@ -38,21 +38,47 @@ public class AuthController {
                 )
         );
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return jwtUtils.generateToken(userDetails.getUsername());
+        String username = userDetails.getUsername();
+
+        // Validar el username (email) antes de usarlo
+        if (!isValidEmail(username)) {
+            throw new IllegalArgumentException("Invalid username format");
+        }
+
+        return jwtUtils.generateToken(username);
     }
 
     @PostMapping("/signup")
     public String registerUser(@RequestBody UserDTO user) {
+        // Validar el email
+        String email = user.getEmail();
+        if (!isValidEmail(email)) {
+            return "Error: Invalid email format!";
+        }
+
+        // Verificar si el nombre de usuario ya está tomado
         if (userRepository.findByName(user.getName()) != null) {
             return "Error: Username is already taken!";
         }
-        User newUser = new User( new UserDTO(
+
+        // Crear y guardar el usuario
+        User newUser = new User(new UserDTO(
                 user.getName(),
                 user.getLastName(),
-                user.getEmail(),
+                email,
                 encoder.encode(user.getPassword()))
         );
         userRepository.save(newUser);
         return "User registered successfully!";
+    }
+
+    // Método para validar el formato del email
+    private boolean isValidEmail(String email) {
+        if (email == null) {
+            return false;
+        }
+        // Expresión regular para validar el formato del email
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+        return email.matches(emailRegex);
     }
 }
