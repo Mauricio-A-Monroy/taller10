@@ -89,8 +89,8 @@ public class AuthController {
             throw new IllegalArgumentException("Email cannot be null");
         }
 
-        // Expresión regular más estricta para el email
-        String emailRegex = "^[A-Za-z0-9]+([._%+-][A-Za-z0-9]+)*@[A-Za-z0-9-]+(\\.[A-Za-z]{2,})$";
+        // Expresión regular optimizada para el email
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
         if (!email.matches(emailRegex)) {
             throw new IllegalArgumentException("Invalid email format");
         }
@@ -98,4 +98,5 @@ public class AuthController {
         // Sanitizar el email usando OWASP Java Encoder
         return Encode.forHtml(email);
     }
+
 }
