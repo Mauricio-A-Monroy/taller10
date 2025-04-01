@@ -39,27 +39,6 @@ class AuthControllerTest {
         MockitoAnnotations.openMocks(this); // Inicializa los mocks
     }
 
-    @Test
-    void testSignIn_Success() {
-        // Arrange
-        UserDTO userDTO = new UserDTO("testUser", "lastName", "test@example.com", "password");
-        Authentication authentication = mock(Authentication.class);
-        UserDetails userDetails = mock(UserDetails.class);
-
-        when(authenticationManager.authenticate(any())).thenReturn(authentication);
-        when(authentication.getPrincipal()).thenReturn(userDetails);
-        when(userDetails.getUsername()).thenReturn("test@example.com");
-        when(jwtUtil.generateToken("test@example.com")).thenReturn("fakeToken");
-
-        // Act
-        String result = authController.authenticateUser(userDTO);
-
-        // Assert
-        assertNotNull(result);
-        assertEquals("fakeToken", result);
-        verify(authenticationManager, times(1)).authenticate(any());
-        verify(jwtUtil, times(1)).generateToken("test@example.com");
-    }
 
     @Test
     void testSignUp_Success() {

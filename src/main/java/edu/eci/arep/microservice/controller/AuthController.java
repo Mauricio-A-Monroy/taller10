@@ -1,6 +1,5 @@
 package edu.eci.arep.microservice.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
@@ -12,6 +11,11 @@ import edu.eci.arep.microservice.config.JwtUtil;
 import edu.eci.arep.microservice.dto.UserDTO;
 import edu.eci.arep.microservice.model.User;
 import edu.eci.arep.microservice.repository.UserRepository;
+import org.owasp.encoder.Encode;
+
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -30,31 +34,38 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public String authenticateUser(@RequestBody UserDTO user) {
+    public Map<String, String> authenticateUser(@RequestBody UserDTO user) {
+        // Validar y sanitizar el email antes de autenticar
+        String email = validateAndSanitizeEmail(user.getEmail());
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        user.getEmail(),
+                        email,
                         user.getPassword()
                 )
         );
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String username = userDetails.getUsername();
 
-        // Validar el username (email) antes de usarlo
-        if (!isValidEmail(username)) {
-            throw new IllegalArgumentException("Invalid username format");
+        // Obtener el ID del usuario desde la base de datos
+        User userFromDb = userRepository.findByEmail(username);
+        if (userFromDb == null) {
+            throw new IllegalArgumentException("User not found");
         }
+        String userId = userFromDb.getId(); // Asumiendo que el modelo User tiene un campo ID
 
-        return jwtUtils.generateToken(username);
+        String token = jwtUtils.generateToken(userId);
+
+        // Devolver el token en un objeto JSON
+        Map<String, String> response = new HashMap<>();
+        response.put("token", token);
+        return response;
     }
 
     @PostMapping("/signup")
     public String registerUser(@RequestBody UserDTO user) {
-        // Validar el email
-        String email = user.getEmail();
-        if (!isValidEmail(email)) {
-            return "Error: Invalid email format!";
-        }
+        // Validar y sanitizar el email
+        String email = validateAndSanitizeEmail(user.getEmail());
 
         // Verificar si el nombre de usuario ya está tomado
         if (userRepository.findByName(user.getName()) != null) {
@@ -72,13 +83,19 @@ public class AuthController {
         return "User registered successfully!";
     }
 
-    // Método para validar el formato del email
-    private boolean isValidEmail(String email) {
+    // Método para validar y sanitizar el email
+    private String validateAndSanitizeEmail(String email) {
         if (email == null) {
-            return false;
+            throw new IllegalArgumentException("Email cannot be null");
         }
-        // Expresión regular para validar el formato del email
-        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-        return email.matches(emailRegex);
+
+        // Expresión regular más estricta para el email
+        String emailRegex = "^[A-Za-z0-9]+([._%+-][A-Za-z0-9]+)*@[A-Za-z0-9-]+(\\.[A-Za-z]{2,})$";
+        if (!email.matches(emailRegex)) {
+            throw new IllegalArgumentException("Invalid email format");
+        }
+
+        // Sanitizar el email usando OWASP Java Encoder
+        return Encode.forHtml(email);
     }
 }

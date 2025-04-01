@@ -17,30 +17,32 @@ public class JwtUtil {
     @Value("${jwt.expiration}")
     private int jwtExpirationMs;
     private SecretKey key;
-    // Initializes the key after the class is instantiated and the jwtSecret is injected, 
-    // preventing the repeated creation of the key and enhancing performance
+
     @PostConstruct
     public void init() {
         this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
-    // Generate JWT token
-    public String generateToken(String username) {
+
+    // Generar token usando el ID del usuario
+    public String generateToken(String userId) {
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(userId) // Usar el ID del usuario en lugar del email
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
-    // Get username from JWT token
-    public String getUsernameFromToken(String token) {
+
+    // Obtener el ID del usuario desde el token
+    public String getUserIdFromToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key).build()
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
     }
-    // Validate JWT token
+
+    // Validar el token
     public boolean validateJwtToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
